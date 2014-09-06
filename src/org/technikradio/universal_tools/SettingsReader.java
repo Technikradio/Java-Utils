@@ -8,8 +8,6 @@ import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import org.technikradio.cui.Console;
-
 public class SettingsReader {
 
 	private Hashtable<String, String> values;

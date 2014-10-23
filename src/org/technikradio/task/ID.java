@@ -3,6 +3,12 @@ package org.technikradio.task;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
+/**
+ * This class is designed to be an exact ID for an object.<br/>
+ * NOTE: if it is an weak fingerprint the is a (relatively)<br/>
+ * hight change to produce a duplicated fingerprint
+ * @author Doralitze
+ */
 public class ID {
 	private final String baseString;
 	private final String identifierString;

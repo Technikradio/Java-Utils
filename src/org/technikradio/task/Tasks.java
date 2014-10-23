@@ -8,10 +8,25 @@ public class Tasks {
 		t = new AdvancedHashtable<ID, Job>();
 	}
 
+	/**
+	 * A basic method to apply small tasks without having<br/>
+	 * to code long lines of code. This uses only the basic<br/>
+	 * settings
+	 * @param r The runnable to apply
+	 */
 	public static void i(Runnable r) {
 		apply(new Job(r));
 	}
 
+	/**
+	 * This apply a task based on a Job and an ID<br/>
+	 * It is recommended to use the ID of the task<br/>
+	 * but not required.
+	 * @param j The Job containing the task
+	 * @param id The ID to give the running Element
+	 * @return true | false based on the fact if the
+	 *         given ID is already on the stack or not
+	 */
 	public static boolean apply(Job j, ID id) {
 		if (t.containsKey(id))
 			return false;
@@ -25,6 +40,12 @@ public class Tasks {
 		return true;
 	}
 
+	/**
+	 * This method apply a given task based on it´s ID
+	 * @param j the task to apply
+	 * @return true | false based on the fact if the<br/>
+	 *         given ID is already on the stack or not
+	 */
 	public static boolean apply(Job j) {
 		ID id = j.getID();
 		if (t.containsKey(id))
@@ -39,6 +60,17 @@ public class Tasks {
 		return true;
 	}
 
+	/**
+	 * This method apply a job after a given period of time.<br/>
+	 * It is recommended to use the ID of the Job but not<br/>
+	 * required.
+	 * @param j The job containing the task to apply
+	 * @param id The ID to give the running Element
+	 * @param millis The period of time between the<br/>
+	 *        registration and the execution in milliseconds
+	 * @return true | false based on the fact if the<br/>
+	 *         given ID is already on the stack or not
+	 */
 	public static boolean applyAfterTime(final Job j, final ID id,
 			final long millis) {
 		if (t.containsKey(id))
@@ -63,6 +95,16 @@ public class Tasks {
 		return true;
 	}
 
+	/**
+	 * This method apply a job after a given period of time.<br/>
+	 * This method uses the ID of the given Job to identify<br/>
+	 * it.
+	 * @param j The job containing the task to apply
+	 * @param millis The period of time between the<br/>
+	 *        registration and the execution in milliseconds
+	 * @return true | false based on the fact if the<br/>
+	 *         given ID is already on the stack or not
+	 */
 	public static boolean applyAfterTime(final Job j, final long millis) {
 		final ID id = j.getID();
 		if (t.containsKey(id))
@@ -87,6 +129,16 @@ public class Tasks {
 		return true;
 	}
 
+	/**
+	 * This method interrupt a task based on the given ID.<br/>
+	 * NOTE: This method uses the ID given at the time of<br/>
+	 * registration and NOT the ID of the task. It is highly<br/>
+	 * recommended to use the task´s ID at registration but<br/>
+	 * not required. If there is an other task having the ID<br/>
+	 * of the registered task´s ID the wrong task may be<br/>
+	 * interrupted!
+	 * @param id The ID to identify the correct task.
+	 */
 	public static void interrupt(ID id) {
 		t.get(id).getThread().interrupt();
 	}
@@ -103,10 +155,19 @@ public class Tasks {
 		}
 	}
 	
+	/**
+	 * This method returns the running Thread of an applyed task.<br/>
+	 * If there is no task with the given ID it will return null.
+	 * @param key The ID to identify the task.
+	 * @return the running Thread (AdvancedThread)
+	 */
 	public static AdvancedThread getRunningInstanceByID(ID key){
 		return t.get(key).getThread();
 	}
 
+	/**
+	 * This method will interrupt all running tasks.
+	 */
 	public static void interruptAll() {
 		for(Job j : t.getAllValues()){
 			j.getThread().interrupt();

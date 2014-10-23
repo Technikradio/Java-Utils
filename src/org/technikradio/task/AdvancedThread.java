@@ -62,6 +62,11 @@ public class AdvancedThread extends Thread {
 		finishedWork = false;
 	}
 	
+	/**
+	 * This method adds an FinishedNotifier to<br/>
+	 * the list of notifications
+	 * @param fn The FinishedNotifier to add
+	 */
 	public void addFinishedNotifier(FinishedNotifier fn){
 		lfn.add(fn);
 	}

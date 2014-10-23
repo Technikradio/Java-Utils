@@ -24,6 +24,10 @@ public class AdvancedHashtable<K, V> extends Hashtable<K, V> {
 		super(t);
 	}
 	
+	/**
+	 * This method will return all values.
+	 * @return An unsorted Array containing all values
+	 */
 	@SuppressWarnings("unchecked")
 	public V[] getAllValues(){
 		Enumeration<V> values = this.elements();

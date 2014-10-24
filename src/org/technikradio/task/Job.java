@@ -77,6 +77,8 @@ public class Job{
 	}
 
 	/**
+	 * This sets the maximum progress. If it is less than 0<br>
+	 * it disables the progress feature.
 	 * @param maxProgress the maximum amount of progress<br>
 	 * possible (default: 100 because of percent)
 	 */
@@ -92,6 +94,8 @@ public class Job{
 	}
 
 	/**
+	 * This sets the current progress. If it is less than 0<br>
+	 * it disables the progress feature.
 	 * @param currentProgress the currentProgress to set<br>
 	 * (from 0 to {@link org.technikradio.task.Job#setMaxProgress(int)
 	 * maximum progress})

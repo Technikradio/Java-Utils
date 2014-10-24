@@ -7,6 +7,7 @@ public class AdvancedThread extends Thread {
 	private ArrayList<FinishedNotifier> lfn;
 	private boolean finishedWork;
 
+	//TODO document the constructors
 	public AdvancedThread() {
 		super();
 		lfn = new ArrayList<FinishedNotifier>();
@@ -71,8 +72,10 @@ public class AdvancedThread extends Thread {
 		lfn.add(fn);
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Thread#run()
+	/**
+	 * This method overrides the super implementation<br>
+	 * because it didn´t fit the needs.<br>
+	 * See {@link java.lang.Thread#run() this} for further information.
 	 */
 	@Override
 	public void run() {

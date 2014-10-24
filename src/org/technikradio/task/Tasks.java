@@ -3,9 +3,46 @@ package org.technikradio.task;
 public class Tasks {
 
 	private static AdvancedHashtable<ID, Job> t;
+	private static boolean running;
+	private static AdvancedThread updateValuesThread;
+	private static int updateIntervall;
+
+	/**
+	 * @return the current updateintervall of the information collector
+	 */
+	public static synchronized int getUpdateIntervall() {
+		return updateIntervall;
+	}
+
+	/**
+	 * @param updateIntervall the updateIntervall to set for the information collector
+	 */
+	public static synchronized void setUpdateIntervall(int updateIntervall) {
+		Tasks.updateIntervall = updateIntervall;
+	}
 
 	static {
 		t = new AdvancedHashtable<ID, Job>();
+		running = true;
+		updateIntervall = 1000;
+		updateValuesThread = new AdvancedThread(new Runnable(){
+			private void updateValues(){
+				
+			}
+			
+			@Override
+			public void run() {
+				while(Tasks.running == true){
+					updateValues();
+					try {
+						Thread.sleep(Tasks.updateIntervall);
+					} catch (InterruptedException e) {
+						//should be ok becaus it will check next
+					}
+				}
+			}});
+		updateValuesThread.setPriority(Thread.MIN_PRIORITY);
+		updateValuesThread.start();
 	}
 
 	/**
@@ -172,5 +209,35 @@ public class Tasks {
 		for(Job j : t.getAllValues()){
 			j.getThread().interrupt();
 		}
+	}
+	
+	/**
+	 * This method must be called before the<br>
+	 * application exits, because it interrupts<br>
+	 * all running threads and cleans up the environment.
+	 */
+	public static synchronized void exit(){
+		gc();
+		for(Job j : t.getAllValues()){
+			try{
+				j.getThread().interrupt();
+			}catch(NullPointerException e){
+				j.stop();
+				t.remove(j);
+			}
+		}
+		gc();
+		running = false;
+		updateValuesThread.interrupt();
+		System.gc();
+	}
+	
+	/**
+	 * This method detects the amount of<br>
+	 * running tasks.
+	 * @return The amount of currently running tasks
+	 */
+	public static synchronized int getTaskCount(){
+		return t.size();
 	}
 }

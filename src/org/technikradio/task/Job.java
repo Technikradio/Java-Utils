@@ -7,6 +7,9 @@ public class Job{
 	private ID id;
 	private Runnable task;
 	private AdvancedThread th;
+	private int maxProgress;
+	private int currentProgress;
+	private boolean allowed;
 	
 	/**
 	 * This creates a new Job.
@@ -26,6 +29,9 @@ public class Job{
 	public Job(Runnable r, ID id){
 		task = r;
 		this.id = id;
+		maxProgress = 100;
+		currentProgress = 0;
+		allowed = true;
 	}
 	
 	/**
@@ -37,15 +43,18 @@ public class Job{
 		this(r, new ID(name));
 	}
 	
+	//Undocumented because it is intern
 	void start(FinishedNotifier fn){
 		AdvancedThread t = new AdvancedThread(task);
 		t.setName("Task:" + id.getName());
 		id.setRunningIdentifier(t.getId());
 		t.addFinishedNotifier(fn);
-		t.start();
+		if(allowed)
+			t.start();
 		th = t;
 	}
 	
+	//Undocumented because it is intern
 	AdvancedThread getThread(){
 		return th;
 	}
@@ -56,5 +65,43 @@ public class Job{
 	 */
 	public ID getID(){
 		return id;
+	}
+
+	/**
+	 * @return the maximum possible progress<br>
+	 * (for exmaple 100 if the job calculates in<br>
+	 * percent)
+	 */
+	public synchronized int getMaxProgress() {
+		return maxProgress;
+	}
+
+	/**
+	 * @param maxProgress the maximum amount of progress<br>
+	 * possible (default: 100 because of percent)
+	 */
+	public synchronized void setMaxProgress(int maxProgress) {
+		this.maxProgress = maxProgress;
+	}
+
+	/**
+	 * @return the current made progress
+	 */
+	public synchronized int getCurrentProgress() {
+		return currentProgress;
+	}
+
+	/**
+	 * @param currentProgress the currentProgress to set<br>
+	 * (from 0 to {@link org.technikradio.task.Job#setMaxProgress(int)
+	 * maximum progress})
+	 */
+	public synchronized void setCurrentProgress(int currentProgress) {
+		this.currentProgress = currentProgress;
+	}
+	
+	//Undocumented because it is intern
+	synchronized void stop(){
+		allowed = false;
 	}
 }

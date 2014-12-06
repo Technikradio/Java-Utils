@@ -11,7 +11,9 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class Calendar extends JPanel{
+import org.technikradio.controls.Calendar.Month.Day;
+
+public class Calendar extends JPanel {
 	public static final short TYPE_DISABLED = 0;
 	public static final short TYPE_ENABLED = 1;
 	public static final short TYPE_CLICKED = 2;
@@ -60,14 +62,94 @@ public class Calendar extends JPanel{
 			months.add(m);
 			this.add(m);
 		}
+		this.addStateChangedListener(infoBox);
+	}
+
+	/**
+	 * This loads an identity into the calendar Format: <allowed day 1>|<allowed
+	 * day 2> where an allowed day is defined as follows: <day>:<month>:<state>
+	 * Note: this method doesn´t care about checking the format. It is up to you
+	 * to check it if you aren´t shoure about the correctness of your source. If
+	 * you provide this method with a broken idetity you will line up with a
+	 * totally messed up calendar.
+	 * 
+	 * @param identity
+	 *            The identity to load
+	 */
+	public void loadIdentity(String identity) {
+		String[] days = identity.split("|");
+		for (String day : days) {
+			if (day != "" && day != null) {
+				String[] parts = day.split(":");
+				int date = Integer.parseInt(parts[0]);
+				int month = Integer.parseInt(parts[1]);
+				int state = Integer.parseInt(parts[2]);
+				Month m = months.get(month - 1);
+				Day d = m.getDay(date);
+				d.setState((short) state);
+			}
+		}
+	}
+
+	/**
+	 * This will return an shorted identity of this calendar
+	 * 
+	 * @return the generated identity
+	 */
+	public String getIdentity() {
+		StringBuilder s = new StringBuilder();
+		for (int i = 0; i < months.size(); i++) {
+			Month m = months.get(i);
+			Day[] dl = m.getDays();
+			for (int j = 0; i < dl.length; i++) {
+				Day d = dl[j];
+				if (d.getState() != TYPE_DISABLED) {
+					s.append(j + 1);
+					s.append(':');
+					s.append(i + 1);
+					s.append(':');
+					s.append(d.getState());
+					s.append('|');
+				}
+			}
+		}
+		return s.toString();
+	}
+
+	/**
+	 * This will return an full identity of this calendar. It is recommendet to
+	 * use the short on because the full one contains more data than nessesary.
+	 * However if the destination system doesn´t have a default state or a
+	 * different on you must use this method.
+	 * 
+	 * @return the generated identity
+	 */
+	public String getFullIdentity() {
+		StringBuilder s = new StringBuilder();
+		for (int i = 0; i < months.size(); i++) {
+			Month m = months.get(i);
+			Day[] dl = m.getDays();
+			for (int j = 0; i < dl.length; i++) {
+				Day d = dl[j];
+
+				s.append(j + 1);
+				s.append(':');
+				s.append(i + 1);
+				s.append(':');
+				s.append(d.getState());
+				s.append('|');
+
+			}
+		}
+		return s.toString();
 	}
 
 	private int getDays(int year, int month) {
 		// TODO Add code to decide the amount of days inside this month
 		return 0;
 	}
-	
-	public interface AllowedChangeListener{
+
+	public interface AllowedChangeListener {
 		public void allowedChanged(boolean newState);
 	}
 
@@ -79,7 +161,7 @@ public class Calendar extends JPanel{
 
 	public void addStateChangedListener(StateChangedListener i) {
 		stateChangedListeners.add(i);
-		for(Month m : months){
+		for (Month m : months) {
 			m.addStateChangedListener(i);
 		}
 	}
@@ -128,12 +210,12 @@ public class Calendar extends JPanel{
 				} else if (state == TYPE_ENABLED) {
 					this.setBackground(Color.BLUE);
 				}
-				for(StateChangedListener s : stateChangedListeners){
+				for (StateChangedListener s : stateChangedListeners) {
 					s.changedByCode(state, this, oldState);
 				}
 			}
-			
-			public void addStateChangedListener(StateChangedListener i){
+
+			public void addStateChangedListener(StateChangedListener i) {
 				stateChangedListeners.add(i);
 			}
 
@@ -146,7 +228,7 @@ public class Calendar extends JPanel{
 				} else if (this.state == TYPE_CLICKED) {
 					setState(TYPE_ENABLED);
 				}
-				for(StateChangedListener s : stateChangedListeners){
+				for (StateChangedListener s : stateChangedListeners) {
 					s.changedByUser(state, this);
 				}
 			}
@@ -187,25 +269,34 @@ public class Calendar extends JPanel{
 			}
 			stateChangedListeners = new ArrayList<StateChangedListener>();
 		}
-		
-		public void addStateChangedListener(StateChangedListener i){
+
+		public void addStateChangedListener(StateChangedListener i) {
 			stateChangedListeners.add(i);
-			for(Day d : dayList){
+			for (Day d : dayList) {
 				d.addStateChangedListener(i);
 			}
 		}
+
+		public Day getDay(int date) {
+			return dayList.get(date - 1);
+		}
+
+		public Day[] getDays() {
+			Day[] d = new Day[dayList.size()];
+			return dayList.toArray(d);
+		}
 	}
 
-	class InfoBox extends JComponent implements StateChangedListener{
+	class InfoBox extends JComponent implements StateChangedListener {
 		private static final long serialVersionUID = 8511965928874657612L;
 		private int days = 0;
 		private boolean locked;
-		
+
 		@Override
 		public void changedByCode(short newState, Object source, short old) {
-			if(newState == TYPE_CLICKED && old == TYPE_ENABLED){
+			if (newState == TYPE_CLICKED && old == TYPE_ENABLED) {
 				setDaysLeft(getDaysLeft() - 1);
-			} else if(newState == TYPE_ENABLED && old == TYPE_CLICKED){
+			} else if (newState == TYPE_ENABLED && old == TYPE_CLICKED) {
 				setDaysLeft(getDaysLeft() + 1);
 			}
 		}
@@ -214,18 +305,18 @@ public class Calendar extends JPanel{
 		public void changedByUser(short newState, Object source) {
 			// Nothing to do here
 		}
-		
-		public void setDaysLeft(int daysLeft){
+
+		public void setDaysLeft(int daysLeft) {
 			days = daysLeft;
 		}
-		
-		public boolean areMoreDaysAllowed(){
-			if(days > 0)
+
+		public boolean areMoreDaysAllowed() {
+			if (days > 0)
 				return true;
 			return false;
 		}
-		
-		public int getDaysLeft(){
+
+		public int getDaysLeft() {
 			return days;
 		}
 

@@ -1,8 +1,11 @@
 package org.technikradio.universal_tools;
 
+import java.io.PrintStream;
+
 public class Console {
 	
 	private static int currentColor;
+	private static PrintStream outs;
 	
 	public static final int StyleNormal = 0;
 	public static final int StyleBolt = 1;
@@ -33,6 +36,10 @@ public class Console {
 	public static final int ForegroundPink = 235;
 	public static final int ForegroundLightCyan = 236;
 	public static final int ForegroundLightGray = 230;
+	
+	static{
+		outs = System.out;
+	}
 
 	public enum LogType{
 		Error,
@@ -48,12 +55,12 @@ public class Console {
 		resetColor();
 		if(c > 200){
 			int i = c - 200;
-			System.out.println("^[[" + style + ";1" + i + "m");
+			outs.println("^[[" + style + ";1" + i + "m");
 		} else if(c > 100){
 			int i = c - 100;
-			System.out.println("^[[" + style + ";0" + i + "m");
+			outs.println("^[[" + style + ";0" + i + "m");
 		} else {
-			System.out.println("^[[" + style + ";" + c + "m");
+			outs.println("^[[" + style + ";" + c + "m");
 		}
 	}
 	
@@ -61,15 +68,19 @@ public class Console {
 		return currentColor;
 	}
 	
+	public static void setOutputStream(PrintStream out){
+		outs = out;
+	}
+	
 	private static void printInformation(Object sender,
 			String Information){
-		System.out.print(sender.toString());
-		System.out.print("): ");
-		System.out.println(Information);
+		outs.print(sender.toString());
+		outs.print("): ");
+		outs.println(Information);
 	}
 
 	public static void resetColor(){
-		System.out.print("^[[0m");
+		outs.print("^[[0m");
 	}
 	
 	public static void log(LogType error, Object sender,
@@ -77,19 +88,19 @@ public class Console {
 		int c = currentColor;
 		if(error == LogType.Error){
 			setColor(ForegroundRed);
-			System.out.print("[ERROR] :: (");
+			outs.print("[ERROR] :: (");
 			printInformation(sender, Information);
 		} else if(error == LogType.Information){
 			setColor(ForegroundBlue);
-			System.out.print("[Information] :: (");
+			outs.print("[Information] :: (");
 			printInformation(sender, Information);
 		} else if(error == LogType.Warning){
 			setColor(ForegroundYellow);
-			System.out.print("[Warning] :: (");
+			outs.print("[Warning] :: (");
 			printInformation(sender, Information);
 		} else {
 			setColor(ForegroundBlack);
-			System.out.print("[Output] :: (");
+			outs.print("[Output] :: (");
 			printInformation(sender, Information);
 		}
 		setColor(c);

@@ -115,7 +115,7 @@ public class Api {
 				return true;
 			}});
 		a.functions.put("[", new Function(){
-
+			//TODO memory bug fixen
 			@Override
 			public boolean execute(Stack stack, Api parent) {
 				String name;

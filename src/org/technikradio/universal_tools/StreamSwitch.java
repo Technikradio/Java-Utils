@@ -7,6 +7,7 @@ public class StreamSwitch<Stream extends PrintStream> implements Runnable{
 	
 	private Thread t;
 	private Stream input;
+	@SuppressWarnings("unused")
 	private ArrayList<Stream> output;
 	
 	public StreamSwitch(Stream s){

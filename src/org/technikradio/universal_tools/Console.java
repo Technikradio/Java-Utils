@@ -6,6 +6,7 @@ public class Console {
 	
 	private static int currentColor;
 	private static PrintStream outs;
+	private static boolean colorsEnabled;
 	
 	public static final int StyleNormal = 0;
 	public static final int StyleBolt = 1;
@@ -39,6 +40,7 @@ public class Console {
 	
 	static{
 		outs = System.out;
+		colorsEnabled = false;
 	}
 
 	public enum LogType{
@@ -55,12 +57,15 @@ public class Console {
 		resetColor();
 		if(c > 200){
 			int i = c - 200;
-			outs.println("^[[" + style + ";1" + i + "m");
+			if(colorsEnabled)
+				outs.println("^[[" + style + ";1" + i + "m");
 		} else if(c > 100){
 			int i = c - 100;
-			outs.println("^[[" + style + ";0" + i + "m");
+			if(colorsEnabled)
+				outs.println("^[[" + style + ";0" + i + "m");
 		} else {
-			outs.println("^[[" + style + ";" + c + "m");
+			if(colorsEnabled)
+				outs.println("^[[" + style + ";" + c + "m");
 		}
 	}
 	
@@ -80,7 +85,8 @@ public class Console {
 	}
 
 	public static void resetColor(){
-		outs.print("^[[0m");
+		if(colorsEnabled)
+			outs.print("^[[0m");
 	}
 	
 	public static void log(LogType error, Object sender,
@@ -104,6 +110,14 @@ public class Console {
 			printInformation(sender, Information);
 		}
 		setColor(c);
+	}
+
+	public static boolean areColorsEnabled() {
+		return colorsEnabled;
+	}
+
+	public static void setColorsEnabled(boolean colorsEnabled) {
+		Console.colorsEnabled = colorsEnabled;
 	}
 
 }

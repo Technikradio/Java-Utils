@@ -137,6 +137,20 @@ public class ParaDate {
 		public void setInitedFlag() {
 			this.inited = true;
 		}
+		
+		@Override
+		public String toString(){
+			String s = Short.toString(hours);
+			s.concat(":");
+			s.concat(Short.toString(minutes));
+			s.concat(":");
+			s.concat(Short.toString(seconds));
+			s.concat(":");
+			s.concat(Integer.toString(millis));
+			s.concat(":");
+			s.concat(Integer.toString(nanos));
+			return s;
+		}
 	}
 
 	public ParaDate(short day, short month, int year) {
@@ -216,6 +230,18 @@ public class ParaDate {
 	 */
 	public void setTime(Time time) {
 		this.time = time;
+	}
+	
+	@Override
+	public String toString(){
+		String s = Short.toString(month);
+		s.concat("/");
+		s.concat(Short.toString(day));
+		s.concat("/");
+		s.concat(Integer.toString(year));
+		s.concat(" ");
+		s.concat(time.toString());
+		return s;
 	}
 
 }

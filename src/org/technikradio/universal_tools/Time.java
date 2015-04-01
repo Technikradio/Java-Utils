@@ -1,6 +1,18 @@
 package org.technikradio.universal_tools;
 
+import org.technikradio.universal_tools.Console.LogType;
+
 public class Time{
+	
+	private static boolean debugOutput = false;
+	
+	/**
+	 * @param debugOutput the debugOutput to set
+	 */
+	public static void setDebugOutput(boolean debugOutput) {
+		Time.debugOutput = debugOutput;
+	}
+
 	private short hours;
 	private short minutes;
 	private short seconds;
@@ -134,16 +146,19 @@ public class Time{
 	
 	@Override
 	public String toString(){
-		String s = Short.toString(hours);
-		s.concat(":");
-		s.concat(Short.toString(minutes));
-		s.concat(":");
-		s.concat(Short.toString(seconds));
-		s.concat(":");
-		s.concat(Integer.toString(millis));
-		s.concat(":");
-		s.concat(Integer.toString(nanos));
-		return s;
+		StringBuilder sb = new StringBuilder();
+		sb.append(Short.toString(hours));
+		sb.append(":");
+		sb.append(Short.toString(minutes));
+		sb.append(":");
+		sb.append(Short.toString(seconds));
+		sb.append(":");
+		sb.append(Integer.toString(millis));
+		sb.append(":");
+		sb.append(Integer.toString(nanos));
+		if(debugOutput)
+			Console.log(LogType.Information, "Debug/ParaDate", "Created string: " + sb.toString());
+		return sb.toString();
 	}
 	
 	public static Time valueOf(String s){

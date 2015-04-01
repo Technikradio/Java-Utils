@@ -87,21 +87,22 @@ public class ParaDate {
 	
 	@Override
 	public String toString(){
-		String s = Short.toString(month);
-		s.concat("/");
-		s.concat(Short.toString(day));
-		s.concat("/");
-		s.concat(Integer.toString(year));
-		s.concat(" ");
-		s.concat(time.toString());
-		return s;
+		StringBuilder sb = new StringBuilder();
+		sb.append(Short.toString(month));
+		sb.append("//");
+		sb.append(Short.toString(day));
+		sb.append("//");
+		sb.append(Integer.toString(year));
+		sb.append("_");
+		sb.append(time.toString());
+		return sb.toString();
 	}
 	
 	public static ParaDate valueOf(String s){
 		ParaDate pd = new ParaDate();
-		String[] parts = s.split(" ");
+		String[] parts = s.split("_");
 		{
-			String[] data = parts[0].split("/");
+			String[] data = parts[0].split("//");
 			pd.setMonth(Short.valueOf(data[0]));
 			pd.setDay(Short.valueOf(data[1]));
 			pd.setYear(Integer.valueOf(data[2]));

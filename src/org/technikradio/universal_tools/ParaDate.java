@@ -110,5 +110,15 @@ public class ParaDate {
 		pd.setTime(Time.valueOf(parts[1]));
 		return pd;
 	}
+	
+	public String getMinimalDate(){
+		StringBuilder sb = new StringBuilder();
+		sb.append(Short.toString(day));
+		sb.append(". ");
+		sb.append(Short.toString(month));
+		sb.append(". ");
+		sb.append(Integer.toString(year));
+		return sb.toString();
+	}
 
 }

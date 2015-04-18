@@ -98,5 +98,10 @@ public class ID {
 	public void setRunningIdentifier(long runningIdentifier) {
 		this.runningIdetifier = runningIdentifier;
 	}
+	
+	@Override
+	public String toString(){
+		return "ID:{" + baseString + "}+TCP:{" + identifierString + "}";
+	}
 
 }

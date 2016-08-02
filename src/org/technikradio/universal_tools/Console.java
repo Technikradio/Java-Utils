@@ -3,11 +3,11 @@ package org.technikradio.universal_tools;
 import java.io.PrintStream;
 
 public class Console {
-	
+
 	private static int currentColor;
 	private static PrintStream outs;
 	private static boolean colorsEnabled;
-	
+
 	public static final int StyleNormal = 0;
 	public static final int StyleBolt = 1;
 	public static final int StyleUnderline = 4;
@@ -37,7 +37,7 @@ public class Console {
 	public static final int ForegroundPink = 235;
 	public static final int ForegroundLightCyan = 236;
 	public static final int ForegroundLightGray = 230;
-	
+
 	static{
 		outs = System.out;
 		colorsEnabled = false;
@@ -47,12 +47,13 @@ public class Console {
 		Error,
 		Warning,
 		Information,
-		StdOut
+		StdOut,
+		Debug
 	}
 	public static void setColor(int c){
 		setColor(c, 0);
 	}
-	
+
 	public static void setColor(int c, int style){
 		resetColor();
 		if(c > 200){
@@ -68,15 +69,15 @@ public class Console {
 				outs.println("^[[" + style + ";" + c + "m");
 		}
 	}
-	
+
 	public static int getCurrentColor(){
 		return currentColor;
 	}
-	
+
 	public static void setOutputStream(PrintStream out){
 		outs = out;
 	}
-	
+
 	private static void printInformation(Object sender,
 			String Information){
 		outs.print(sender.toString());
@@ -88,7 +89,7 @@ public class Console {
 		if(colorsEnabled)
 			outs.print("^[[0m");
 	}
-	
+
 	public static void log(LogType error, Object sender,
 			String Information) {
 		int c = currentColor;
@@ -103,6 +104,10 @@ public class Console {
 		} else if(error == LogType.Warning){
 			setColor(ForegroundYellow);
 			outs.print("[Warning] :: (");
+			printInformation(sender, Information);
+		} else if(error == LogType.Debug){
+			setColor(ForegroundBlack);
+			outs.print("[Debug] :: (");
 			printInformation(sender, Information);
 		} else {
 			setColor(ForegroundBlack);

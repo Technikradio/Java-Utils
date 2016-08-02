@@ -1,4 +1,4 @@
 Java-Utils
 ==========
 
-Some basic utils for our projects writen in java
+Some basic utils for our projects written in java

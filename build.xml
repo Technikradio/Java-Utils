@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="all" name="JavaUtils">
+
+  <property name="target.version" value="1.8" />
+
+  <target name="all" depends="compile,doc"
+    description="This target compiles the jar file and creates the javadoc." />
+
+  <target name="clean" description="This target cleans the build environment.">
+    <delete file="Utils.jar" />
+    <delete dir="bin" />
+    <delete dir="doc" />
+  </target>
+
+  <target name="compile" description="This target compiles the utils library.">
+    <mkdir dir="bin" />
+    <javac
+      destdir="bin"
+      optimize="on"
+      includeAntRuntime="no">
+      <src path="src" />
+    </javac>
+    <jar destfile="Utils.jar">
+      <fileset dir="bin"/>
+    </jar>
+  </target>
+
+  <target name="doc"
+    description="This target creates the javadoc of this library.">
+    <mkdir dir="doc" />
+    <javadoc
+      sourcepath="src"
+      destdir="doc"
+      includenosourcepackages="true" />
+  </target>
+</project>

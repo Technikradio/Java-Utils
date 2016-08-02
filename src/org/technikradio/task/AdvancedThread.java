@@ -3,7 +3,7 @@ package org.technikradio.task;
 import java.util.ArrayList;
 
 public class AdvancedThread extends Thread {
-	
+
 	private ArrayList<FinishedNotifier> lfn;
 	private boolean finishedWork;
 
@@ -56,13 +56,13 @@ public class AdvancedThread extends Thread {
 		lfn = new ArrayList<FinishedNotifier>();
 		finishedWork = false;
 	}
-	
+
 	public AdvancedThread(Runnable target, FinishedNotifier fn){
 		super(target);
 		lfn = new ArrayList<FinishedNotifier>();
 		finishedWork = false;
 	}
-	
+
 	/**
 	 * This method adds an FinishedNotifier to<br/>
 	 * the list of notifications
@@ -74,7 +74,7 @@ public class AdvancedThread extends Thread {
 
 	/**
 	 * This method overrides the super implementation<br>
-	 * because it didn´t fit the needs.<br>
+	 * because it didn't fit the needs.<br>
 	 * See {@link java.lang.Thread#run() this} for further information.
 	 */
 	@Override
@@ -85,11 +85,11 @@ public class AdvancedThread extends Thread {
 		}
 		finishedWork = true;
 	}
-	
+
 	/**
 	 * This method decides if a thread did finished its work
 	 * Note: this is not the same as Thread.isAlive() because
-	 * this is just true if all FinishedNotifier´s have done
+	 * this is just true if all FinishedNotifier's have done
 	 * their work.
 	 * @return true if the thread did finished his work
 	 */

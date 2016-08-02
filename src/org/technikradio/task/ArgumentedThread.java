@@ -2,7 +2,7 @@ package org.technikradio.task;
 
 /**
  * This class is designed to run an thread with arguments<br>
- * It fixes to problems at once because the Arguments don´t<br>
+ * It fixes to problems at once because the Arguments don't<br>
  * need to be final and there are not instable structures<br>
  * required to access the based Thread object.
  * @author Doralitze
@@ -12,7 +12,7 @@ public class ArgumentedThread<V> extends AdvancedThread {
 	private ArgumentedRunnable<V> ar;
 	private V[] args;
 	private boolean isRunning;
-	
+
 	private static Runnable getEmtyDummy(){
 		return new Runnable(){
 			@Override
@@ -21,7 +21,7 @@ public class ArgumentedThread<V> extends AdvancedThread {
 			}
 		};
 	}
-	
+
 	/**
 	 * This constructs a new argumented thread.
 	 */
@@ -118,7 +118,7 @@ public class ArgumentedThread<V> extends AdvancedThread {
 		ar = target;
 		isRunning=false;
 	}
-	
+
 	/**
 	 * This constructs a new argumented thread
 	 * @param target the context to execute as a new thread
@@ -130,7 +130,7 @@ public class ArgumentedThread<V> extends AdvancedThread {
 		args = arguments;
 		isRunning=false;
 	}
-	
+
 	/**
 	 * This method has been overridden because<br>
 	 * it was required to fit the needs of this<br>
@@ -143,7 +143,7 @@ public class ArgumentedThread<V> extends AdvancedThread {
 		ar.run(this, args);
 		super.run();
 	}
-	
+
 	/**
 	 * This method sets the arguments for the thread.<br>
 	 * NOTE: Use only before the task has been started!

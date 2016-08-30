@@ -19,6 +19,10 @@
       optimize="on"
       includeAntRuntime="no">
       <src path="src" />
+      <!--<src><fileset dir="src">
+        <include name="**/"/>
+        <exclude name="**/srp/**"/>
+      </fileset></src>-->
     </javac>
     <jar destfile="Utils.jar">
       <fileset dir="bin"/>

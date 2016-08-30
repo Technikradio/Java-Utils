@@ -67,6 +67,28 @@ public class ImageBuffer {
 	}
 
 	/**
+	 * This constructor creates a new instance of an image buffer with an
+	 * specified background.
+	 * 
+	 * @param width
+	 *            The with of the image to store.
+	 * @param height
+	 *            The height of the image to store.
+	 * @param type
+	 *            The type of the desired image buffer.
+	 * @param backgroundColor
+	 *            The desired color used to fill the background.
+	 */
+	public ImageBuffer(int width, int height, ImageType type, Color backgroundColor) {
+		this(width, height, type);
+		for (int y = 0; y < this.height; y++) {
+			for (int x = 0; x < this.width; x++) {
+				setPixelAt(x, y, backgroundColor);
+			}
+		}
+	}
+
+	/**
 	 * Use this method to get the width of the stored image.
 	 * 
 	 * @return the width of the stored image.
@@ -119,16 +141,109 @@ public class ImageBuffer {
 	private int mapUp(int i) {
 		switch (this.type.getBitDeph()) {
 		case 8:
-			return (int) ((i / 256) * MAX_32bit_NUM);
+			return (int) ((i / 255) * MAX_32bit_NUM);
 		case 24:
-			return (int) ((i / 256) * MAX_32bit_NUM);
+			return (int) ((i / MAX_24bit_NUM) * MAX_32bit_NUM);
 		case 32:
 		default:
 			return i;
 		}
 	}
-	
-	public void setPixelAt(int x, int y, Color c){
-		
+
+	public void setPixelAt(int x, int y, Color c) {
+		switch (this.type) {
+		case GRAY_SCALE:
+		case hrGRAY_SCALE:
+			data[x][y][0] = mapDown(
+					Math.sqrt((Math.pow(c.getRed(), 2) + Math.pow(c.getGreen(), 2) + Math.pow(c.getBlue(), 2)) / 3));
+			break;
+		case RGB:
+		case hrRGB:
+		case sRGB:
+			data[x][y][0] = mapDown(c.getRed());
+			data[x][y][1] = mapDown(c.getGreen());
+			data[x][y][2] = mapDown(c.getBlue());
+			break;
+		case RGBA:
+		case sRGBA:
+		case hrRGBA:
+			data[x][y][0] = mapDown(c.getRed());
+			data[x][y][1] = mapDown(c.getGreen());
+			data[x][y][2] = mapDown(c.getBlue());
+			data[x][y][3] = mapDown(c.getAlpha());
+			break;
+		default:
+			break;
+
+		}
 	}
+
+	private int mapDown(double i) {
+		switch (this.type.getBitDeph()) {
+		case 8:
+			return (int) ((i / MAX_32bit_NUM) * 255);
+		case 24:
+			return (int) ((i / MAX_32bit_NUM) * MAX_24bit_NUM);
+		case 32:
+		default:
+			return (int) ((i / MAX_32bit_NUM) * 255);
+		}
+	}
+
+	/**
+	 * Use this method to get a part image of the main image.
+	 * 
+	 * @param x
+	 *            The x coordinate to start from.
+	 * @param y
+	 *            The y coordinate to start from.
+	 * @param width
+	 *            The desired with of the image part.
+	 * @param height
+	 *            The desired height of the image part.
+	 * @return The computed image part.
+	 */
+	public ImageBuffer getPartImage(int x, int y, int width, int height) {
+		ImageBuffer ib = new ImageBuffer(width, height, this.type);
+		for (int cx = x; cx < x + width && cx < this.width; cx++) {
+			for (int cy = y; cy < y + height && cy < this.height; cy++) {
+				for (int t = 0; t < data[cx][cy].length; t++) {
+					ib.data[cx][cy][t] = data[cx][cy][t];
+				}
+			}
+		}
+		return ib;
+	}
+
+	/**
+	 * Use this method to get a part image of the main image but of a different
+	 * type.<br/>
+	 * Warning using this method instead of computing an image of the same type
+	 * may require way more time due to color space conversion.
+	 * 
+	 * @param x
+	 *            The x coordinate to start from.
+	 * @param y
+	 *            The y coordinate to start from.
+	 * @param width
+	 *            The desired with of the image part.
+	 * @param height
+	 *            The desired height of the image part.
+	 * @param type
+	 *            The desired type of the image part.
+	 * @return The computed image part.
+	 */
+	public ImageBuffer getPartImage(int x, int y, int width, int height, ImageType type) {
+		if (type.equals(this.type))
+			return getPartImage(x, y, width, height);
+		ImageBuffer ib = new ImageBuffer(width, height, type);
+		for (int cx = x; cx < x + width && cx < this.width; cx++) {
+			for (int cy = y; cy < y + height && cy < this.height; cy++) {
+				ib.setPixelAt(cx, cy, this.getPixelAt(cx, cy));
+			}
+		}
+		return ib;
+	}
+
+	// TODO implement file saving
 }

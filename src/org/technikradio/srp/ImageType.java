@@ -139,7 +139,6 @@ public enum ImageType {
 	
 	/**
 	 * Use this method to get the number of bits represented inside the image type.
-	 * @param type The type to check
 	 * @return The bit depth of the image type.
 	 */
 	public int getBitDeph(){

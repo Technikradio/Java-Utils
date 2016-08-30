@@ -34,45 +34,62 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.technikradio.srp;
 
 /**
- * This class represents a pixel color.
- * Aldough the corresponding image buffer bight be of an lower image type tier the color represents the maximum possible quality.
+ * This class represents a pixel color. Aldough the corresponding image buffer
+ * bight be of an lower image type tier the color represents the maximum
+ * possible quality.
+ * 
  * @author doralitze
  *
  */
 public class Color {
-	private int r,g,b,a;
-	
+	private int r, g, b, a;
+
 	/**
 	 * This constructor creates a white without transparency.
 	 */
-	public Color(){
+	public Color() {
 		super();
-		this.r = 255;
-		this.g = 255;
-		this.b = 255;
-		this.a = 255;
+		this.r = convert8to32bit(255);
+		this.g = convert8to32bit(255);
+		this.b = convert8to32bit(255);
+		this.a = convert8to32bit(255);
 	}
 
 	/**
-	 * This constructor initializes a new color with a default alpha value of 255.
-	 * @param r The red component of the color.
-	 * @param g The green component of the color.
-	 * @param b The blue component of the color.
+	 * This constructor initializes a new color with a default alpha value of
+	 * 255. NOTE that this class uses a 32bit color space. use the
+	 * convert8to32bit method to convert from the popular 8bit color space.
+	 * 
+	 * @see org.technikradio.srp.Color#convert8to32bit(int)
+	 * @param r
+	 *            The red component of the color.
+	 * @param g
+	 *            The green component of the color.
+	 * @param b
+	 *            The blue component of the color.
 	 */
 	public Color(int r, int g, int b) {
 		super();
 		this.r = r;
 		this.g = g;
 		this.b = b;
-		this.a = 255;
+		this.a = convert8to32bit(255);
 	}
 
 	/**
-	 * This constructor initializes a new color.
-	 * @param r The red component of the color.
-	 * @param g The green component of the color.
-	 * @param b The blue component of the color.
-	 * @param a The alpha (transparency) component of the color.
+	 * This constructor initializes a new color. NOTE that this class uses a
+	 * 32bit color space. use the convert8to32bit method to convert from the
+	 * popular 8bit color space.
+	 * 
+	 * @see org.technikradio.srp.Color#convert8to32bit(int)
+	 * @param r
+	 *            The red component of the color.
+	 * @param g
+	 *            The green component of the color.
+	 * @param b
+	 *            The blue component of the color.
+	 * @param a
+	 *            The alpha (transparency) component of the color.
 	 */
 	public Color(int r, int g, int b, int a) {
 		super();
@@ -84,6 +101,7 @@ public class Color {
 
 	/**
 	 * Use this method to get the red component of the color
+	 * 
 	 * @return the r component of the color.
 	 */
 	public int getRed() {
@@ -92,7 +110,9 @@ public class Color {
 
 	/**
 	 * Use this method to set the red component of the color.
-	 * @param r the red value to set
+	 * 
+	 * @param r
+	 *            the red value to set
 	 */
 	public void setRed(int r) {
 		this.r = r;
@@ -100,6 +120,7 @@ public class Color {
 
 	/**
 	 * Use this method to get the green component of the color
+	 * 
 	 * @return the g component of the color.
 	 */
 	public int getGreen() {
@@ -108,7 +129,9 @@ public class Color {
 
 	/**
 	 * Use this method to set the green component of the color.
-	 * @param g the green value to set
+	 * 
+	 * @param g
+	 *            the green value to set
 	 */
 	public void setGreen(int g) {
 		this.g = g;
@@ -116,6 +139,7 @@ public class Color {
 
 	/**
 	 * Use this method to get the blue component of the color
+	 * 
 	 * @return the b component of the color.
 	 */
 	public int getBlue() {
@@ -124,7 +148,9 @@ public class Color {
 
 	/**
 	 * Use this method to set the blue component of the color.
-	 * @param b the blue value to set
+	 * 
+	 * @param b
+	 *            the blue value to set
 	 */
 	public void setBlue(int b) {
 		this.b = b;
@@ -132,6 +158,7 @@ public class Color {
 
 	/**
 	 * Use this method to get the alpha component of the color
+	 * 
 	 * @return the transparency component of the color.
 	 */
 	public int getAlpha() {
@@ -140,10 +167,24 @@ public class Color {
 
 	/**
 	 * Use this method to set the alpha component of the color.
-	 * @param a the alpha value to set
+	 * 
+	 * @param a
+	 *            the alpha value to set
 	 */
 	public void setAlpha(int a) {
 		this.a = a;
 	}
-	
+
+	/**
+	 * Use this method to convert from the common 8bit color space to the 32bit
+	 * color space.
+	 * 
+	 * @param i
+	 *            The 8bit value to map up.
+	 * @return The computed 32bit value.
+	 */
+	public int convert8to32bit(int i) {
+		return (int) ((i / 255) * ImageBuffer.MAX_32bit_NUM);
+	}
+
 }

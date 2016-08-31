@@ -183,8 +183,17 @@ public class Color {
 	 *            The 8bit value to map up.
 	 * @return The computed 32bit value.
 	 */
-	public int convert8to32bit(int i) {
+	public static int convert8to32bit(int i) {
 		return (int) ((i / 255) * ImageBuffer.MAX_32bit_NUM);
+	}
+	
+	/**
+	 * Use this method to convert an 32bit value to an 8bit color value.
+	 * @param i The 32bit value to map down.
+	 * @return The computed 8bit value.
+	 */
+	public static int convert32to8bit(int i) {
+		return (int) ((i / ImageBuffer.MAX_32bit_NUM) * 255);
 	}
 
 }

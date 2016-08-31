@@ -33,8 +33,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.technikradio.srp;
 
+import org.technikradio.srp.filters.Filter;
+
 /**
  * This class is used to draw on an image buffer.
+ * 
  * @author doralitze
  *
  */
@@ -43,14 +46,15 @@ public class Renderer {
 	private final ImageBuffer buffer;
 	private Color currentDrawColor;
 	private int transX = 0, transY = 0;
-	
-	public Renderer(ImageBuffer image){
+
+	public Renderer(ImageBuffer image) {
 		buffer = image;
-		currentDrawColor = new Color(0,0,0);
+		currentDrawColor = new Color(0, 0, 0);
 	}
 
 	/**
 	 * Use this method to get the current color.
+	 * 
 	 * @return the current drawing color
 	 */
 	public Color getColor() {
@@ -59,19 +63,102 @@ public class Renderer {
 
 	/**
 	 * Use this method to set the drawing color.
-	 * @param newDrawColor the new color to use for drawing.
+	 * 
+	 * @param newDrawColor
+	 *            the new color to use for drawing.
 	 */
 	public void setColor(Color newDrawColor) {
 		this.currentDrawColor = newDrawColor;
 	}
-	
+
 	/**
 	 * Use this method in order to invoke translation.
-	 * @param x The amount to translate on the x axis.
-	 * @param y The amount to translate on the y axis.
+	 * 
+	 * @param x
+	 *            The amount to translate on the x axis.
+	 * @param y
+	 *            The amount to translate on the y axis.
 	 */
-	public void translate(int x, int y){
+	public void translate(int x, int y) {
 		transX += x;
 		transY += y;
 	}
+
+	/**
+	 * Use this method to invoke a filter on the image.
+	 * 
+	 * @param f
+	 *            The filter to invoke.
+	 */
+	public void invokeFilter(Filter f) {
+		invokeFilter(f, TaskProvider.getNumberOfAviableCores());
+	}
+
+	/**
+	 * Use this method to invoke a filter on the image. Note that the optimum
+	 * performance result will be achieved by using the
+	 * {@link org.technikradio.srp.Renderer#invokeFilter(Filter)} method due to
+	 * its knowledge of the system.
+	 * 
+	 * @param f
+	 *            The filter to invoke.
+	 * @param numberOfThreads
+	 *            The amount of threads that the filter should use.
+	 */
+	public void invokeFilter(final Filter f, int numberOfThreads) {
+		f.prepare(this);
+		for (int i = 0; i < numberOfThreads; i++) {
+			final int lowerEnd = (buffer.getHeight() / numberOfThreads) * i;
+			final int upperEnd = (buffer.getHeight() / numberOfThreads) * (i + 1);
+			Runnable r = new Runnable() {
+
+				@Override
+				public void run() {
+					for (int y = 0; y < buffer.getWidth(); y++)
+						for (int x = lowerEnd; x <= upperEnd; x++)
+							f.perform(buffer, x, y);
+				}
+			};
+			TaskProvider.handleProcessingRequest(r);
+		}
+	}
+
+	/**
+	 * Use this method to render a different image inside this one.
+	 * 
+	 * @param image
+	 *            The image to render.
+	 * @param x
+	 *            The x coordinate where the image should be rendered.
+	 * @param y
+	 *            The y coordinate where the image should be rendered.
+	 */
+	public void drawImage(ImageBuffer image, int x, int y) {
+		drawImage(image, x, y, image.getWidth(), image.getHeight(), 0, 0);
+	}
+
+	/**
+	 * Use this method to render a different image inside this one.
+	 * 
+	 * @param image
+	 *            The image to render.
+	 * @param x
+	 *            The x coordinate where the image should be rendered.
+	 * @param y
+	 *            The y coordinate where the image should be rendered.
+	 * @param width
+	 *            The width of the image part that should be rendered.
+	 * @param height
+	 *            The height of the image part that should be rendered.
+	 * @param partX
+	 *            The x coordinate of the image part where the rendering should
+	 *            start.
+	 * @param partY
+	 *            The y coordinate of the image part where the rendering should
+	 *            start.
+	 */
+	public void drawImage(ImageBuffer image, int x, int y, int width, int height, int partX, int partY) {
+		// TODO implement with alpha multiplication and translation.
+	}
+
 }

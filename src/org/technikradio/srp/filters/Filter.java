@@ -31,7 +31,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /**
  * 
  */
-package org.technikradio.srp;
+package org.technikradio.srp.filters;
+
+import org.technikradio.srp.ImageBuffer;
+import org.technikradio.srp.Renderer;
 
 /**
  * This abstract class is used to construct filters to apply to an image buffer.
